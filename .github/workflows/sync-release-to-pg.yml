@@ -1,10 +1,5 @@
 name: Merge release to pg
 
-on:
-  push:
-    branches:
-      - release  # Trigger on push to the release branch
-
 jobs:
   merge-release-to-pg:
     runs-on: ubuntu-latest
