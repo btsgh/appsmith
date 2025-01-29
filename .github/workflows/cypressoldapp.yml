@@ -8,7 +8,7 @@ jobs:
     strategy:
       matrix:
         include:
-          - baseUrl: ‘https://release-ee-mongo.appsmith.com/’
+          - baseUrl: https://release-ee-mongo.appsmith.com/
             specs: cypress/e2e/OldAppTesting/release-ee-mongo/**/*.{js,ts}
             
     name: Cypress Tests - ${{ matrix.baseUrl }}
