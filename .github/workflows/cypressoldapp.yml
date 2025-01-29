@@ -9,7 +9,7 @@ jobs:
       matrix:
         include:
           - baseUrl: https://release-ee-mongo.appsmith.com/
-            specs: cypress/e2e/OldAppTesting/release-ee-mongo/**/*.cy.{js,ts}"
+            specs: cypress/e2e/OldAppTesting/release-ee-mongo/**/*.spec.ts"
             
     name: Cypress Tests - ${{ matrix.baseUrl }}
     steps:
