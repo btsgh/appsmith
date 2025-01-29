@@ -24,18 +24,19 @@ jobs:
         working-directory: app/client
         run: |
           yarn install --immutable
-      - name: Update Cypress config
+      - name: Setting up the cypress tests
+        if: steps.run_result.outputs.run_result != 'success'
+        shell: bash
         run: |
-          sed -i “s|baseUrl: \“.*\“|baseUrl: \“${{ matrix.baseUrl }}\“|” app/client/cypress.config.ts
-      - name: Run Cypress tests
-        uses: cypress-io/github-action@v6
-        env:
-          CYPRESS_USERNAME: ${{ secrets.OLD_APP_TESTING_USER }}
-          CYPRESS_PASSWORD: ${{ secrets.OLD_APP_TESTING_PWD }}
-        with:
-          browser: chrome
-          build: npm run build
-          start: npm start
-          wait-on: ${{ matrix.baseUrl }}
-          config-file: app/client/cypress.config.ts
-          spec: ${{ matrix.specs }}
+          cd app/client
+          chmod a+x ./cypress/setup-test-ci.sh
+          ./cypress/setup-test-ci.sh
+          
+      - name: Install Google Chrome 129.0.6668.100
+        run: |
+          sudo apt-get remove google-chrome-stable
+          wget -q https://dl.google.com/linux/chrome/deb/pool/main/g/google-chrome-stable/google-chrome-stable_129.0.6668.100-1_amd64.deb
+          sudo apt-get update
+          sudo apt-get install -y ./google-chrome-stable_129.0.6668.100-1_amd64.deb
+          echo "BROWSER_PATH=$(which google-chrome)" >> $GITHUB_ENV
+          google-chrome --version
