@@ -40,3 +40,34 @@ jobs:
           sudo apt-get install -y ./google-chrome-stable_129.0.6668.100-1_amd64.deb
           echo "BROWSER_PATH=$(which google-chrome)" >> $GITHUB_ENV
           google-chrome --version
+
+      - name: Run the cypress test
+        uses: cypress-io/github-action@v6
+        env:
+          GITHUB_TOKEN: ""
+          CYPRESS_USERNAME: ${{ secrets.OLD_APP_TESTING_USER }}
+          CYPRESS_PASSWORD: ${{ secrets.OLD_APP_TESTING_PWD }}
+          CYPRESS_TESTUSERNAME1: ""
+          CYPRESS_TESTPASSWORD1: ""
+          CYPRESS_TESTUSERNAME2: ""
+          CYPRESS_TESTPASSWORD2: ""
+          CYPRESS_EXCLUDE_TAGS: "airgap"
+          CYPRESS_AIRGAPPED: false
+          APPSMITH_DISABLE_TELEMETRY: true
+          CYPRESS_VERIFY_TIMEOUT: 100000
+          RUNID: ${{ github.run_id }}
+          ATTEMPT_NUMBER: ${{ github.run_attempt }}
+          REPOSITORY: ${{ github.repository }}
+          COMMITTER: ${{ env.COMMIT_INFO_AUTHOR }}
+          TAG: ${{ github.event_name }}
+          BRANCH: ${{ env.COMMIT_INFO_BRANCH }}
+          CYPRESS_SPECS: ${{ matrix.specs }}
+          CYPRESS_RERUN: ${{steps.run_result.outputs.rerun}}
+          CYPRESS_STATIC_ALLOCATION: true
+        with:
+          browser: ${{ env.BROWSER_PATH }}
+          install: false
+          config-file: cypress_ci_custom.config.ts
+          spec: ${{ matrix.specs }}
+          working-directory: app/client
+          env: "NODE_ENV=development"
