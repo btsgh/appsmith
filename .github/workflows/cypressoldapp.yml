@@ -9,9 +9,9 @@ jobs:
       matrix:
         include:
           - baseUrl: ‘https://release-ee-mongo.appsmith.com/’
-            specs: ‘cypress/e2e/Regression_TestSuite/**/*.{js,ts}’
+            specs: ‘cypress/e2e/OldAppTesting/release-ee-mongo/**/*.{js,ts}’
           - baseUrl: ‘https://nightly-saml-alb-https.appsmith.com/’
-            specs: ‘cypress/e2e/Authentication/**/*.{js,ts}’
+            specs: ‘cypress/e2e/OldAppTesting/nightlysaml/**/*.{js,ts}’
     name: Cypress Tests - ${{ matrix.baseUrl }}
     steps:
       - name: Checkout repository
