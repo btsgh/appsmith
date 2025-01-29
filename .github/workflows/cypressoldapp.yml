@@ -21,7 +21,9 @@ jobs:
         with:
           node-version-file: app/client/package.json
       - name: Install dependencies
-        run: npm ci
+        working-directory: app/client
+        run: |
+          yarn install --immutable
       - name: Update Cypress config
         run: |
           sed -i “s|baseUrl: \“.*\“|baseUrl: \“${{ matrix.baseUrl }}\“|” app/client/cypress.config.ts
