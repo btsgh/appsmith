@@ -24,7 +24,7 @@ export default defineConfig({
     openMode: 0,
   },
   e2e: {
-    baseUrl: "http://localhost/",
+    baseUrl: "https://release-ee-mongo.appsmith.com/",
     setupNodeEvents(on, config) {
       addMatchImageSnapshotPlugin(on);
       require("@cypress/grep/src/plugin")(config);
