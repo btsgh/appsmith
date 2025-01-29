@@ -1,0 +1,40 @@
+name: Old Apps Testing
+on:
+  workflow_dispatch:
+    
+jobs:
+  cypress-run:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        include:
+          - baseUrl: ‘https://release-ee-mongo.appsmith.com/’
+            specs: ‘cypress/e2e/Regression_TestSuite/**/*.{js,ts}’
+          - baseUrl: ‘https://nightly-saml-alb-https.appsmith.com/’
+            specs: ‘cypress/e2e/Authentication/**/*.{js,ts}’
+    name: Cypress Tests - ${{ matrix.baseUrl }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ‘20’
+          cache: ‘npm’
+      - name: Install dependencies
+        run: npm ci
+      - name: Update Cypress config
+        run: |
+          sed -i “s|baseUrl: \“.*\“|baseUrl: \“${{ matrix.baseUrl }}\“|” app/client/cypress.config.ts
+      - name: Run Cypress tests
+        uses: cypress-io/github-action@v6
+        env:
+          CYPRESS_USERNAME: ${{ secrets.CYPRESS_USERNAME }}
+          CYPRESS_PASSWORD: ${{ secrets.CYPRESS_PASSWORD }}
+        with:
+          browser: chrome
+          build: npm run build
+          start: npm start
+          wait-on: ${{ matrix.baseUrl }}
+          config-file: app/client/cypress.config.ts
+          spec: ${{ matrix.specs }}
